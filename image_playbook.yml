@@ -1,0 +1,13 @@
+--- 
+- hosts: my_servers
+  taska: 
+    - name: Create Hello World File
+      file: 
+        path: ~/hello_world
+        state: touch
+    - name: clone repo
+      git: 
+        dest: ~/imageMe
+        repo: "https://github.com/jknaclerz/google-search-python.git"
+      
+
