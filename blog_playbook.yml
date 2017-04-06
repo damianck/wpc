@@ -1,0 +1,32 @@
+---
+- hosts:blog_mode
+  become: true
+  tasks:
+   - name: download wordpress
+     get_url:
+        url_https://wordpress.org/latest.tar.gz
+        dest: /tmp/wordpress.tar.gz
+   - name: create directory
+     file:
+        path: /var/www/blog
+        state: directory
+        mode: 0775
+   - name: unpack wordress
+     unarchive:
+        src: /tmp/wordpress.tar.tgz
+        dest: /var/www/blog
+        remote_src: true
+   - name: install mysql
+     yum:
+        name: "((item))"
+        state: latest
+   with_items:
+        - MySQL-python
+        - mysql56-server
+   - name: install python extra pack
+     pip:
+         name: install MySQL-python
+   - name: create new db
+     mysql_db:
+         name: blog
+         state: present
