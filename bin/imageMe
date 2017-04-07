@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python ~/image-me/image_me.py "$1"
