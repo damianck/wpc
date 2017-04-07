@@ -1,0 +1,21 @@
+---
+- hosts: my_servers
+  vars:
+    serch_engine_id: "006879359584856769921:rplfy3clmho"
+    google_api_key: "AIzaSyDLLC1pqOxkWA8jUjM-Cfwbl_13Sh_2t98"
+  tasks:
+    - name: Create Hello World file
+      file:
+        path: ~/hello_world
+        state: touch
+    - name: Sync repo
+      git:
+        repo: https://github.com/jkanclerz/google-search-python.git
+        dest: ~/imageme
+    - name: set Env vars
+      lineinfile:
+        dest: "~/.bash_profile"
+        line: "export SEARCH_ENGINE_ID={{ serch_engine_id }}"
+    - lineinfile:
+        dest: "~/.bash_profile"
+        line: "export GOOGLE_CLOUD_API_KEY={{ google_api_key }}" 
