@@ -1,32 +1,33 @@
 ---
-- hosts:blog_mode
+- hosts: blog_node
   become: true
+  vars:
+    web_root: /var/www/myblog
   tasks:
-   - name: download wordpress
-     get_url:
-        url_https://wordpress.org/latest.tar.gz
-        dest: /tmp/wordpress.tar.gz
-   - name: create directory
-     file:
-        path: /var/www/blog
-        state: directory
-        mode: 0775
-   - name: unpack wordress
-     unarchive:
-        src: /tmp/wordpress.tar.tgz
-        dest: /var/www/blog
-        remote_src: true
-   - name: install mysql
-     yum:
-        name: "((item))"
+    - name: Install mysql db
+      yum:
+        name: "{{item}}"
         state: latest
-   with_items:
-        - MySQL-python
+      with_items:
         - mysql56-server
-   - name: install python extra pack
-     pip:
-         name: install MySQL-python
-   - name: create new db
-     mysql_db:
-         name: blog
-         state: present
+        - mysql56-devel
+        - httpd
+    - name: Get wordpress package
+      get_url:
+        url: https://wordpress.org/latest.zip
+        dest: /tmp/wordpress.zip
+    - unarchive:
+        src: /tmp/wordpress.zip
+        dest: /var/www
+        remote_src: True
+    - command: mv /var/www/wordpress "{{ web_root }}"
+    - template:
+        src: templates/blog_vhost.conf
+        dest: /etc/httpd/conf.d/blog.conf
+    - service:
+        name: httpd
+        state: restarted
+    - name: Remove welcome conf
+      file:
+        path: /etc/httpd/conf.d/welcome.conf
+        state: absent
