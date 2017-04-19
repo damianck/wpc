@@ -1,0 +1,108 @@
+http://gitlab.kni.uek.krakow.pl/groups/wpc
+
+git clone <<link>>
+
+
+yum install python-pip
+
+pip install <??check!!!!!~!!>
+
+pip install pytest
+
+**********************************
+
+pip install flask
+
+mkdir web
+
+touch app.py
+
+//
+from flask import Flask
+from flask import renbder_templates
+from flask import request
+from flask import abort, redirect, url_for
+
+app = Flask(__name__)
+
+@app.route("/")
+def upload():
+    return render_template('upload_file.html')
+    #return "Hello World!"
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    uploaded_file = request.files['uploaded_media'] #nazwa w formularzu
+    uploaded_file.save('/media/upload-upload/var/files/' secure_filename(uploaded_file.filename)) #sciezke sprawdzic
+    return redirect(url_for('upload'))
+    
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80,debug=True)
+
+///
+pwd
+mnkdir templates
+touch upload_file.html
+
+python app.py
+
+service firewall status
+service iptables status
+
+// upload_file.html
+<!DOCTYPE html>
+<html>
+<body>
+
+<form action="" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="uploaded_media" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit">
+</form>
+
+</body>
+</html>
+//*************************** storage amazon s3
+
+
+touch app.py
+
+//
+from flask import Flask
+from flask import renbder_templates
+from flask import request
+from flask import abort, redirect, url_for
+from media.s3_storage import S3MediaStorage
+import boto3
+from botocore.client import Config
+
+app = Flask(__name__)
+
+@app.route("/")
+def upload():
+    return render_template('upload_file.html')
+    #return "Hello World!"
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    uploaded_file = request.files['uploaded_media'] #nazwa w formularzu
+    #uploaded_file.save('/media/upload-upload/var/files/' secure_filename(uploaded_file.filename)) #sciezke sprawdzic
+    s3 = boto3.resource('s3', config=Config(signature_version='s3v4'))
+    media_storage = S3MediaStorage(s3=s3, bucket_name='kanclerj-153')
+    media_storage.store(key=uploaded_file.filename, media=uploaded_file)
+    return redirect(url_for('upload'))
+    
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80,debug=True)
+
+#ustawienia globalne
+sudo su
+export PYTHONPATH=/home/ec2-user/media-upload/
+
+
+
+
+
+
+
+
