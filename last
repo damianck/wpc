@@ -1,4 +1,5 @@
 http://gitlab.kni.uek.krakow.pl/groups/wpc
+ssh -i "id_student.pem" ec2-user@ec2-35-158-60-192.eu-central-1.compute.amazonaws.com
 
 git clone <<link>>
 
