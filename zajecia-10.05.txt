@@ -1,0 +1,10 @@
+in => photo
+
+dla wszystkich zdjec:
+  kopiujemy kazde zdjecie x razy
+  przygotowywujemy klip o dlugosci 3-5 sek.
+  dodajemy animacje (efekt przejscia) ok 1sek.
+  
+skleić wyrenderowane klipy  
+
+out => video
